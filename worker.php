@@ -93,7 +93,7 @@ function SmartEdge_Local_Data_Message_Processor(&$logger) {
 				$value = isset($usage->value) ? $usage->value : '';
 				$timestamp = isset($usage->timestamp) ? $usage->timestamp : time();
 				$logger->info("Storing: siteCd [{$siteCd}] deviceCd [{$deviceCd}] label [{$label}] value [{$value}] timestamp [{$timestamp}]");
-				if (($label === '') && ($value === ''))
+				if (($label === '') && ($value === '')) {
 					continue;
 				}
 				SmartEdge_Local_Data_MySQL::store($siteCd, $deviceCd, $label, $value, $timestamp);
