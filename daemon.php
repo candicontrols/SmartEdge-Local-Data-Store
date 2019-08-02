@@ -18,7 +18,7 @@ $lockFile = sys_get_temp_dir().'/SmartEdgeLocalDataStore.'.$config['identifier']
 if (file_exists($lockFile)) {
 	$lastModifiedTime = filemtime($lockFile);
 	if ((time() - $lastModifiedTime) < EXIT_AFTER_SECONDS) {
-		$logger->error("Daemon lock file in place, exiting. [{$lockFile}]");
+		$logger->notice("Daemon lock file in place, exiting. [{$lockFile}]");
 		die();
 	}
 }
