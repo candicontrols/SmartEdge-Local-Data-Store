@@ -1,5 +1,6 @@
 # SmartEdge-Local-Data-Store
 **Introduction**
+
 This repository contains PHP code to run on a schedule (cron recommended) to pull data from a Google Pub/Sub subscription and store into a local MySQL database.
 
 The Google Pub/Sub subscription needs to be set up as a Partner in Altair SmartEdge.
@@ -9,6 +10,7 @@ See the SmartEdge Public Documentation for details on how to set up a [Partner P
 The code in this repository needs a valid Google user (not a service account) as a subscriber (for example, a gmail account).
 
 **Installation**
+
 Clone this repository to a linux based machine. If using a public server, then make sure the code is not in a public directory.
 
 **Requirements**
@@ -18,6 +20,7 @@ Clone this repository to a linux based machine. If using a public server, then m
  3. cron
 
 **Configuration**
+
 The configuration file lives in config/config.inc.php. The following variables are required to be filled in:
 
     $config['projectId']
@@ -32,6 +35,7 @@ The projectId and subscriptionName can be found on the Partner details page of t
 The database connection parameters need to be for a MySQL database.
 
 **Database Table**
+
 Create the following table in the MySQL database. If you change the table name, make sure the appropriate config variable is updated too.
 
     CREATE TABLE `SmartEdgeData` (
@@ -45,6 +49,7 @@ Create the following table in the MySQL database. If you change the table name, 
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 **Authorization**
+
 Once the config variables have been filled in the application needs to be authorized. Using a terminal, go to the working directory and run the following:
 
     php authorize.php
@@ -53,12 +58,15 @@ Follow the instructions in the terminal (open the specified browser link, author
 *Make sure you use the same Google user (gmail account) as was set up as a subscriber on the Altair SmartEdge Partner.*
 
 **Run**
+
 The application consists of a daemon and a worker. The daemon.php script needs to be run on a schedule (for example, every hour, using cron). 
 
 Only a single instance of the daemon is allowed per installation. The daemon itself will run for one hour, start a new instance, and exit. This will guarantee a continuous running of the application.
 
 **Stop**
+
 To stop the application find the pid of the running daemon.php script and kill it.
 
 **Logs**
+
 The code can log errors, warnings and debug messages to a log file as specified in the config file. By default the log level is set to 'warning'.
