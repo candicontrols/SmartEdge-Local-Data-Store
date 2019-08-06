@@ -2,6 +2,7 @@
 class SmartEdge_Local_Data_MySQL
 {
 	private static $db_host;
+	private static $db_port;
 	private static $db_user;
 	private static $db_password;
 	private static $db_database;
@@ -16,6 +17,7 @@ class SmartEdge_Local_Data_MySQL
 	public static function init($config)
 	{
 		static::$db_host = $config['db_host'];
+		static::$db_port = $config['db_port'];
 		static::$db_user = $config['db_user'];
 		static::$db_password = $config['db_password'];
 		static::$db_database = $config['db_database'];
@@ -27,7 +29,7 @@ class SmartEdge_Local_Data_MySQL
 	private static function connect()
 	{
 		if (!static::$mysqli) {
-			static::$mysqli = new mysqli(static::$db_host, static::$db_user, static::$db_password, static::$db_database);
+			static::$mysqli = new mysqli(static::$db_host, static::$db_user, static::$db_password, static::$db_database, static::$db_port);
 
 			if (static::$mysqli->connect_errno) {
 				static::$errors[] = "Could not connect to database!";

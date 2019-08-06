@@ -43,12 +43,34 @@ if ($errors) {
 }
 
 $scriptName = 'worker.php';
+$workerIdentifier = $config['identifier'].'_WORKER';
 
-$cores = exec("grep 'model name' /proc/cpuinfo | wc -l");
+$uname = exec("uname");
+$cores = 1;
+switch ($uname) {
+	case 'Darwin':
+		$core_count = exec("sysctl -a | grep machdep.cpu | grep core_count");
+		$cores = (int) trim(explode(':', $core_count)[1]);
+		break;
+
+	case 'Linux':
+		$cores = (int) exec("grep 'model name' /proc/cpuinfo | wc -l");
+		break;
+
+	default:
+		$logger->error("Unsupported OS.");
+		die();
+		break;
+}
+if (!$cores) {
+	$cores = 1;
+}
 $loadThreshold = 1*$cores;
 
 $minRunning = $cores; 
 $maxRunning = 50;
+
+$setsid = (($uname === 'Darwin') ? '' : 'setsid ');
 
 $notifyFile = sys_get_temp_dir().'/maxSmartEdgeLocalData.'.$config['identifier'].'.notify';
 $z = 1;
@@ -56,7 +78,17 @@ $startTime = time();
 do {
 	// Because of the way PHP works, this will return itself in the count too
 	// i.e., $count=1 means 0 workers running ($count=2 means 1 worker, etc)
-	$count = exec("pgrep -c -f $scriptName");
+	switch ($uname) {
+		case 'Darwin':
+			$count = (int) trim(exec("ps aux | grep {$workerIdentifier} | wc -l"));
+			// this count also includes itself, need to subtract 1
+			$count -= 1;
+			break;
+		
+		case 'Linux':
+			$count = exec("pgrep -c -f {$workerIdentifier}");
+			break;
+	}
 
 	$startNewWorker = ($count <= $minRunning) || file_exists($notifyFile);
 
@@ -66,7 +98,7 @@ do {
 			$logger->warning('System load ['.$load[1].'] for 5 min is above threshold ['.$loadThreshold.']. Not starting new worker.');
 		}
 		else {
-		    system("setsid php ".__DIR__."/$scriptName $z </dev/null >/dev/null 2>/dev/null &"); // in background, will not wait for return
+		    system("{$setsid}php ".__DIR__."/{$scriptName} {$z} {$workerIdentifier} </dev/null >/dev/null 2>/dev/null &"); // in background, will not wait for return
 		    if (file_exists($notifyFile)) {
 		    	unlink($notifyFile);
 		    }
@@ -83,6 +115,6 @@ while ((time() - $startTime) < EXIT_AFTER_SECONDS);
  */
 unlink($lockFile);
 $command = 'php '.__DIR__.'/daemon.php';
-system("setsid {$command} </dev/null >/dev/null 2>/dev/null &");
+system("{$setsid}{$command} </dev/null >/dev/null 2>/dev/null &");
 
 exit;

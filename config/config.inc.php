@@ -22,6 +22,7 @@ $config['db_host'] = '';
 $config['db_user'] = '';
 $config['db_password'] = '';
 $config['db_database'] = '';
+$config['db_port'] = 3600;
 $config['db_table'] = 'SmartEdgeData';
 
 $config['logFile'] = '/tmp/SmartEdgeLocalDataStore.log';
@@ -75,4 +76,4 @@ switch ($config['projectId']) {
 if (empty($config['environment'])) {
 	die('Project Id not valid!'.PHP_EOL);
 }
-$config['identifier'] = base64_encode($config['subscriptionName']);
+$config['identifier'] = md5($config['projectId'].$config['subscriptionName']);

@@ -1,7 +1,7 @@
 # SmartEdge-Local-Data-Store
 **Introduction**
 
-This repository contains PHP code to run on a schedule (cron recommended) to pull data from a Google Pub/Sub subscription and store into a local MySQL database.
+This repository contains PHP code to run on a schedule (cron recommended) to pull data from a Google Pub/Sub subscription and store into a local MySQL database. Only linux and macOS are supported.
 
 The Google Pub/Sub subscription needs to be set up as a Partner in Altair SmartEdge.
 
