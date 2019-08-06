@@ -22,7 +22,7 @@ $config['db_host'] = '';
 $config['db_user'] = '';
 $config['db_password'] = '';
 $config['db_database'] = '';
-$config['db_port'] = 3600;
+$config['db_port'] = 3306;
 $config['db_table'] = 'SmartEdgeData';
 
 $config['logFile'] = '/tmp/SmartEdgeLocalDataStore.log';
