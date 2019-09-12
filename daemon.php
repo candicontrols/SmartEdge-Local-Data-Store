@@ -114,7 +114,7 @@ while ((time() - $startTime) < EXIT_AFTER_SECONDS);
  * Start new one
  */
 unlink($lockFile);
-$command = 'php '.__DIR__.'/daemon.php';
+$command = 'php '.__FILE__;
 system("{$setsid}{$command} </dev/null >/dev/null 2>/dev/null &");
 
 exit;
